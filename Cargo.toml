@@ -21,3 +21,4 @@ windows = { version = "0.59.0", features = [
     "Win32_Foundation",
     "Win32_Security",
 ] }
+log = { version = "0.4", features = ["std"] }

@@ -58,7 +58,7 @@ fn elevate_sh_exec(cmd: &OsStr, arguments: &OsStr) -> windows_result::Result<()>
     };
 
     if let Err(e) = unsafe { ShellExecuteExW(&mut sh_exec_info) } {
-        eprintln!("ShellExecuteExW: {e:?}");
+        log::error!("ShellExecuteExW: {e:?}");
 
         return Err(e);
     }
@@ -66,7 +66,7 @@ fn elevate_sh_exec(cmd: &OsStr, arguments: &OsStr) -> windows_result::Result<()>
     let r = unsafe { WaitForSingleObject(sh_exec_info.hProcess, INFINITE) };
     if r.0 != WAIT_OBJECT_0.0 {
         let e = Error::from_win32();
-        eprintln!("WaitForSingleObject: {:?} {:?}", e, cmd);
+        log::error!("WaitForSingleObject: {:?} {:?}", e, cmd);
 
         return Err(e);
     }
@@ -85,7 +85,7 @@ fn elevate_sh_exec(cmd: &OsStr, arguments: &OsStr) -> windows_result::Result<()>
 
     let mut status = 0u32;
     if let Err(e) = unsafe { GetExitCodeProcess(sh_exec_info.hProcess, &mut status) } {
-        eprintln!("GetExitCodeProcess: {e:?}");
+        log::error!("GetExitCodeProcess: {e:?}");
         return Err(e);
     }
     unsafe {
@@ -93,7 +93,7 @@ fn elevate_sh_exec(cmd: &OsStr, arguments: &OsStr) -> windows_result::Result<()>
         match a {
             Ok(_) => Ok(()),
             Err(e) => {
-                eprintln!("CloseHandle Bad: {:?}", e);
+                log::error!("CloseHandle Bad: {:?}", e);
                 Err(e)
             }
         }
