@@ -72,12 +72,8 @@ fn elevate_sh_exec(cmd: &OsStr, arguments: &OsStr) -> windows_result::Result<()>
     }
     let stdout = fs::read_to_string(&stdout_file).expect("Failed to read stdout_file");
     let stderr = fs::read_to_string(&stderr_file).expect("Failed to read stderr_file");
-    println!(
-        "{}{}{}",
-        stdout,
-        if stderr.len() > 1 { "\n" } else { "" },
-        stderr
-    );
+    println!("{stdout}");
+    eprintln!("{stderr}");
 
     fs::remove_file(&stdout_file).expect("Failed to remove stdout_file");
     fs::remove_file(&stderr_file).expect("Failed to remove stderr_file");
